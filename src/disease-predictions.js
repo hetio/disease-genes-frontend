@@ -7,14 +7,15 @@ import { faChartBar } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from 'hetio-frontend-components';
 import { IconButton } from 'hetio-frontend-components';
-import { assembleData } from './data.js';
 import { DynamicField } from 'hetio-frontend-components';
 import { Table } from 'hetio-frontend-components';
 import { toComma } from 'hetio-frontend-components';
 import { toFixed } from 'hetio-frontend-components';
 import { toGradient } from 'hetio-frontend-components';
+import { compareObjects } from 'hetio-frontend-components';
+import { assembleData } from './data.js';
 
-const tableUrl =
+const predictionsUrl =
   'https://raw.githubusercontent.com/dhimmel/het.io-dag-data/54dd91f7c3c378b4064e8a99b022d4c637fe413f/browser/disease-tables/';
 
 export class DiseasePredictions extends Component {
@@ -30,8 +31,7 @@ export class DiseasePredictions extends Component {
   componentDidUpdate(prevProps) {
     if (
       this.props.disease &&
-      (this.props.disease || {}).disease_code !==
-        (prevProps.disease || {}).disease_code
+      !compareObjects(prevProps.disease, this.props.disease)
     ) {
       getPredictions(this.props.disease.disease_code).then((predictions) => {
         this.setState({ predictions: predictions });
@@ -124,12 +124,19 @@ export class DiseasePredictions extends Component {
                 <Button
                   className='check_button'
                   onClick={() => {
-                    this.props.setDisease(datum);
+                    this.props.setDiseasePrediction(datum);
                   }}
                 >
                   <FontAwesomeIcon
                     className='fa-xs'
-                    style={{ opacity: 1 }}
+                    style={{
+                      opacity: compareObjects(
+                        datum,
+                        this.props.diseasePrediction
+                      )
+                        ? 1
+                        : 0.15
+                    }}
                     icon={faChartBar}
                   />
                 </Button>
@@ -178,7 +185,7 @@ export class DiseasePredictions extends Component {
 
 async function getPredictions(id) {
   const predictions = await (await fetch(
-    tableUrl + id.replace(':', '_') + '.txt'
+    predictionsUrl + id.replace(':', '_') + '.txt'
   )).text();
 
   return assembleData(predictions);

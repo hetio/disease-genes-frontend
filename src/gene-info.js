@@ -6,9 +6,9 @@ import { DynamicField } from 'hetio-frontend-components';
 import { compareObjects } from 'hetio-frontend-components';
 
 const infoUrl =
-  'https://raw.githubusercontent.com/dhimmel/het.io-dag-data/54dd91f7c3c378b4064e8a99b022d4c637fe413f/browser/disease-info/';
+  'https://raw.githubusercontent.com/dhimmel/het.io-dag-data/54dd91f7c3c378b4064e8a99b022d4c637fe413f/browser/gene-info/';
 
-export class DiseaseInfo extends Component {
+export class GeneInfo extends Component {
   // initialize component
   constructor(props) {
     super(props);
@@ -19,11 +19,9 @@ export class DiseaseInfo extends Component {
 
   // when component updates
   componentDidUpdate(prevProps) {
-    if (
-      this.props.disease &&
-      !compareObjects(prevProps.disease, this.props.disease)
-    ) {
-      getInfo(this.props.disease.disease_code).then((info) => {
+    console.log(this.state.info);
+    if (this.props.gene && !compareObjects(prevProps.gene, this.props.gene)) {
+      getInfo(this.props.gene.gene_code).then((info) => {
         this.setState({ info: info });
       });
     }
@@ -31,16 +29,20 @@ export class DiseaseInfo extends Component {
 
   // display component
   render() {
-    const disease = this.props.disease || {};
-    const name = disease.disease_name || '-';
-    const info = (this.state.info || {}).xref || {};
+    const gene = this.props.gene || {};
+    const name = gene.gene_symbol || '-';
+    const info = this.state.info || {};
     const fields = [
-      ['Dis. Ont. id', disease.disease_code || '-'],
-      ['EFO id', info.EFO || '-'],
-      ['UMLS id', info.UMLS_CUI || '-'],
-      ['pathophysiology', disease.pathophysiology || '-'],
-      ['associations', disease.associations || '-'],
-      ['auroc', toFixed(disease.auroc * 100) + '%']
+      [
+        'aliases',
+        info.aliases && info.aliases.length ? info.aliases.join(', ') : '-'
+      ],
+      ['HGNC id', gene.gene_code || '-'],
+      ['Entrez id', info.entrez || '-'],
+      ['Ensembl id', info.ensembl || '-'],
+      ['Uniprot id', info.uniprot || '-'],
+      ['associations', gene.associations || '-'],
+      ['mean prediction', toFixed(gene.mean_prediction) + '%']
     ];
 
     return (

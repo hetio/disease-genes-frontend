@@ -2,10 +2,12 @@ import React from 'react';
 import { Component } from 'react';
 
 import { Button } from 'hetio-frontend-components';
+import { fetchData } from './data.js';
 import { Diseases } from './diseases.js';
 import { DiseasePredictions } from './disease-predictions.js';
 import { DiseaseInfo } from './disease-info.js';
-import { fetchData } from './data.js';
+import { Genes } from './genes.js';
+import { GeneInfo } from './gene-info.js';
 
 import './app.css';
 
@@ -30,7 +32,8 @@ export class App extends Component {
     fetchData().then((results) => {
       this.setState(
         {
-          diseases: results.diseases
+          diseases: results.diseases,
+          genes: results.genes
         },
         this.loadStateFromUrl
       );
@@ -123,8 +126,22 @@ export class App extends Component {
             setDisease={this.setDisease}
             disease={this.state.disease}
           />
-          <DiseaseInfo disease={this.state.disease} />
-          <DiseasePredictions disease={this.state.disease} />
+          <div style={{ display: this.state.disease ? 'block' : 'none' }}>
+            <DiseaseInfo disease={this.state.disease} />
+            <DiseasePredictions disease={this.state.disease} />
+          </div>
+        </div>
+        <div
+          style={{ display: this.state.tab === 'genes' ? 'block' : 'none' }}
+        >
+          <Genes
+            genes={this.state.genes}
+            setGene={this.setGene}
+            gene={this.state.gene}
+          />
+          <div style={{ display: this.state.gene ? 'block' : 'none' }}>
+            <GeneInfo gene={this.state.gene} />
+          </div>
         </div>
       </>
     );

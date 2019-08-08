@@ -12,8 +12,9 @@ import { Button } from 'hetio-frontend-components';
 import { toComma } from 'hetio-frontend-components';
 import { toFixed } from 'hetio-frontend-components';
 import { toGradient } from 'hetio-frontend-components';
+import { compareObjects } from 'hetio-frontend-components';
 
-export class CompoundTable extends Component {
+export class Genes extends Component {
   // initialize component
   constructor() {
     super();
@@ -24,10 +25,10 @@ export class CompoundTable extends Component {
   // display component
   render() {
     return (
-      <section style={{ display: this.props.visible ? 'block' : 'none' }}>
+      <section>
         <div className='table_attic'>
           <span className='small light'>
-            {toComma(this.props.data.length)} entries
+            {toComma(this.props.genes.length)} entries
           </span>
           <IconButton
             text={this.state.showMore ? 'collapse' : 'expand'}
@@ -41,68 +42,56 @@ export class CompoundTable extends Component {
           containerClass={
             this.state.showMore ? 'table_container_expanded' : 'table_container'
           }
-          data={this.props.data}
-          defaultSortField='treats'
-          defaultSortUp='false'
+          data={this.props.genes}
+          defaultSortField='mean_prediction'
+          defaultSortUp='true'
           sortables={[false, true, true, true, true, true]}
           searchAllFields={true}
           fields={[
             '',
-            'compound_id',
-            'compound_name',
-            'treats',
-            'total_edges',
-            'auroc'
+            'gene_code',
+            'gene_symbol',
+            'associations',
+            'mean_prediction'
           ]}
-          headContents={['', 'ID', 'Name', 'Treats', 'Edges', 'AUROC']}
+          headContents={[
+            '',
+            'ID',
+            'Name',
+            'Assoc',
+            <>
+              Mean
+              <br />
+              Pred
+            </>
+          ]}
           headStyles={[
             { width: 35 },
-            { width: 65 },
-            { width: 200 },
-            { width: 75 },
+            { width: 100 },
+            { width: 100 },
             { width: 75 },
             { width: 75 }
           ]}
-          headClasses={[
-            '',
-            'small left',
-            'small left',
-            'small',
-            'small',
-            'small'
-          ]}
-          headTooltips={['', 'ID', 'Name', 'Treats', 'Edges', 'AUROC']}
+          headClasses={['', 'small left', 'small left', 'small', 'small']}
           bodyTooltips={[
             (datum, field, value) =>
-              'See predictions for "' +
-              datum.compound_name +
-              '" \n\n (' +
-              datum.synonyms
-                .split(' | ')
-                .slice(0, 20)
-                .join(', ') +
-              ')',
-            null,
-            (datum, field, value) => datum.description
+              'See predictions for "' + datum.gene_name + '"'
           ]}
           bodyContents={[
             (datum, field, value) => (
               <Button
                 className='check_button'
                 onClick={() => {
-                  this.props.setCompound(datum);
+                  this.props.setGene(datum);
                 }}
               >
-                {this.props.compound &&
-                datum.compound_id === this.props.compound.compound_id ? (
-                    <FontAwesomeIcon className='fa-xs' icon={faEye} />
-                  ) : (
-                    <FontAwesomeIcon
-                      className='fa-xs'
-                      style={{ opacity: 0.15 }}
-                      icon={faEye}
-                    />
-                  )}
+                <FontAwesomeIcon
+                  className='fa-xs'
+                  style={{
+                    opacity: compareObjects(datum, this.props.gene) ? 1 : 0.15
+                  }}
+                  icon={faEye}
+                />
               </Button>
             ),
             (datum, field, value) => (
@@ -111,11 +100,8 @@ export class CompoundTable extends Component {
             (datum, field, value) => <DynamicField value={value} />,
             (datum, field, value) => <DynamicField value={value} />,
             (datum, field, value) => (
-              <DynamicField value={toComma(value)} fullValue={value} />
-            ),
-            (datum, field, value) => (
               <DynamicField
-                value={toFixed(value * 100) + '%'}
+                value={toFixed(value) + '%'}
                 fullValue={value}
               />
             )
@@ -125,12 +111,10 @@ export class CompoundTable extends Component {
             null,
             null,
             null,
-            null,
             (datum, field, value) => ({
-              background: toGradient(value * 100, [
+              background: toGradient(value, [
                 [0, 'rgba(255, 255, 255, 0)'],
-                [50, 'rgba(255, 255, 255, 0)'],
-                [100, 'rgba(233, 30, 99, 0.5)']
+                [25, 'rgba(233, 30, 99, 0.5)']
               ])
             })
           ]}

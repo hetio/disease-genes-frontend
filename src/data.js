@@ -1,11 +1,15 @@
 const diseasesUrl =
   'https://raw.githubusercontent.com/dhimmel/het.io-dag-data/54dd91f7c3c378b4064e8a99b022d4c637fe413f/browser/disease-summary-table.txt';
+const genesUrl =
+  'https://raw.githubusercontent.com/dhimmel/het.io-dag-data/54dd91f7c3c378b4064e8a99b022d4c637fe413f/browser/gene-summary-table.txt';
 
 export async function fetchData() {
   const diseases = await (await fetch(diseasesUrl)).text();
+  const genes = await (await fetch(genesUrl)).text();
 
   return {
-    diseases: assembleData(diseases)
+    diseases: assembleData(diseases),
+    genes: assembleData(genes)
   };
 }
 

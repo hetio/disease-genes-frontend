@@ -12,6 +12,7 @@ import { Button } from 'hetio-frontend-components';
 import { toComma } from 'hetio-frontend-components';
 import { toFixed } from 'hetio-frontend-components';
 import { toGradient } from 'hetio-frontend-components';
+import { compareObjects } from 'hetio-frontend-components';
 
 export class Diseases extends Component {
   // initialize component
@@ -82,19 +83,9 @@ export class Diseases extends Component {
             'small',
             'small'
           ]}
-          headTooltips={[
-            '',
-            'ID',
-            'Name',
-            'Pathophysiology',
-            'Associations',
-            'AUROC'
-          ]}
           bodyTooltips={[
             (datum, field, value) =>
               'See predictions for "' + datum.disease_name + '"',
-            null,
-            (datum, field, value) => datum.description
           ]}
           bodyContents={[
             (datum, field, value) => (
@@ -104,16 +95,15 @@ export class Diseases extends Component {
                   this.props.setDisease(datum);
                 }}
               >
-                {this.props.disease &&
-                datum.disease_code === this.props.disease.disease_code ? (
-                  <FontAwesomeIcon className='fa-xs' icon={faEye} />
-                ) : (
-                  <FontAwesomeIcon
-                    className='fa-xs'
-                    style={{ opacity: 0.15 }}
-                    icon={faEye}
-                  />
-                )}
+                <FontAwesomeIcon
+                  className='fa-xs'
+                  style={{
+                    opacity: compareObjects(datum, this.props.disease)
+                      ? 1
+                      : 0.15
+                  }}
+                  icon={faEye}
+                />
               </Button>
             ),
             (datum, field, value) => (
