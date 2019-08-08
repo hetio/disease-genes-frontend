@@ -8,6 +8,7 @@ import { DiseasePredictions } from './disease-predictions.js';
 import { DiseaseInfo } from './disease-info.js';
 import { Genes } from './genes.js';
 import { GeneInfo } from './gene-info.js';
+import { GenePredictions } from './gene-predictions.js';
 
 import './app.css';
 
@@ -131,9 +132,7 @@ export class App extends Component {
             <DiseasePredictions disease={this.state.disease} />
           </div>
         </div>
-        <div
-          style={{ display: this.state.tab === 'genes' ? 'block' : 'none' }}
-        >
+        <div style={{ display: this.state.tab === 'genes' ? 'block' : 'none' }}>
           <Genes
             genes={this.state.genes}
             setGene={this.setGene}
@@ -141,6 +140,7 @@ export class App extends Component {
           />
           <div style={{ display: this.state.gene ? 'block' : 'none' }}>
             <GeneInfo gene={this.state.gene} />
+            <GenePredictions gene={this.state.gene} />
           </div>
         </div>
       </>

@@ -16,9 +16,9 @@ import { compareObjects } from 'hetio-frontend-components';
 import { assembleData } from './data.js';
 
 const predictionsUrl =
-  'https://raw.githubusercontent.com/dhimmel/het.io-dag-data/54dd91f7c3c378b4064e8a99b022d4c637fe413f/browser/disease-tables/';
+  'https://raw.githubusercontent.com/dhimmel/het.io-dag-data/54dd91f7c3c378b4064e8a99b022d4c637fe413f/browser/gene-tables/';
 
-export class DiseasePredictions extends Component {
+export class GenePredictions extends Component {
   // initialize component
   constructor(props) {
     super(props);
@@ -29,11 +29,8 @@ export class DiseasePredictions extends Component {
 
   // when component updates
   componentDidUpdate(prevProps) {
-    if (
-      this.props.disease &&
-      !compareObjects(prevProps.disease, this.props.disease)
-    ) {
-      getPredictions(this.props.disease.disease_code).then((predictions) => {
+    if (this.props.gene && !compareObjects(prevProps.gene, this.props.gene)) {
+      getPredictions(this.props.gene.gene_code).then((predictions) => {
         this.setState({ predictions: predictions });
       });
     }
@@ -48,7 +45,7 @@ export class DiseasePredictions extends Component {
           <p className='left'>
             Predictions for{' '}
             <b>
-              <i>{(this.props.disease || {}).disease_name || ''}</i>
+              <i>{(this.props.gene || {}).gene_symbol || ''}</i>
             </b>
           </p>
           <div className='table_attic'>
@@ -76,27 +73,27 @@ export class DiseasePredictions extends Component {
             searchAllFields={true}
             fields={[
               '',
-              'gene_code',
-              'gene_symbol',
+              'disease_code',
+              'disease_name',
+              'pathophysiology',
               'status',
               'other_associations',
-              'mean_prediction',
               'prediction'
             ]}
             headContents={[
               '',
               'ID',
               'Name',
+              <>
+                Patho-
+                <br />
+                physiology
+              </>,
               'Status',
               <>
                 Other
                 <br />
                 Assoc
-              </>,
-              <>
-                Mean
-                <br />
-                Pred
               </>,
               'Prediction'
             ]}
@@ -130,10 +127,7 @@ export class DiseasePredictions extends Component {
                   <FontAwesomeIcon
                     className='fa-xs'
                     style={{
-                      opacity: compareObjects(
-                        datum,
-                        this.props.diseasePrediction
-                      )
+                      opacity: compareObjects(datum, this.props.genePrediction)
                         ? 1
                         : 0.15
                     }}

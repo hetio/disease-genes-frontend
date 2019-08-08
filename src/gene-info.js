@@ -19,7 +19,6 @@ export class GeneInfo extends Component {
 
   // when component updates
   componentDidUpdate(prevProps) {
-    console.log(this.state.info);
     if (this.props.gene && !compareObjects(prevProps.gene, this.props.gene)) {
       getInfo(this.props.gene.gene_code).then((info) => {
         this.setState({ info: info });
