@@ -3,6 +3,7 @@ const diseasesUrl =
 const genesUrl =
   'https://raw.githubusercontent.com/dhimmel/het.io-dag-data/54dd91f7c3c378b4064e8a99b022d4c637fe413f/browser/gene-summary-table.txt';
 
+// get data from above urls
 export async function fetchData() {
   const diseases = await (await fetch(diseasesUrl)).text();
   const genes = await (await fetch(genesUrl)).text();
