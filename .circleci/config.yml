@@ -1,0 +1,64 @@
+version: 2
+
+jobs:
+  test:
+    docker:
+      - image: node:8.15.1-stretch
+    working_directory: ~/hetmech-frontend
+    steps:
+      - checkout
+      - run:
+          name: Frontend tests
+          command: |
+            npm install
+            npm test
+            npm run build
+      - persist_to_workspace:
+          root: ~/hetmech-frontend
+          paths:
+            - .git
+            - build
+
+  deploy:
+    docker:
+      - image: node:8.15.1-stretch
+    working_directory: ~/hetmech-frontend
+    steps:
+      - attach_workspace:
+          at: ~/hetmech-frontend
+      - run:
+          name: Install and configure dependencies
+          command: |
+            npm install --global --silent gh-pages@2.0.1
+      - add_ssh_keys:
+          fingerprints:
+            - "d5:47:d4:c3:01:e8:51:b1:6e:9a:80:39:8b:ae:cc:77"
+      - run:
+          name: Deploy build to gh-pages branch
+          command: |
+            echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+            touch build/.nojekyll  # Disable Jekyll processing on GitHub Pages
+            gh-pages --dist build \
+              --user "CircleCI Deploy Job <ci-build@circleci.com>" \
+              --message \
+            "Deploy webpage on `date --utc --iso-8601`
+
+            Builds https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/commit/$CIRCLE_SHA1
+            Pushed by $CIRCLE_BUILD_URL
+
+            [skip ci]"
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - test:
+          filters:
+            branches:
+              ignore: gh-pages
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
