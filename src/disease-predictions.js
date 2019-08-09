@@ -18,6 +18,7 @@ export class DiseasePredictions extends Component {
   // initialize component
   constructor() {
     super();
+
     this.state = {};
   }
 
@@ -100,6 +101,10 @@ export class DiseasePredictions extends Component {
             'small',
             'small'
           ]}
+          bodyTooltips={[
+            (datum, field, value) =>
+              'See contributions and info for "' + datum.gene_symbol + '"'
+          ]}
           bodyContents={[
             (datum, field, value) => (
               <Button className='check_button'>
@@ -124,10 +129,16 @@ export class DiseasePredictions extends Component {
               <DynamicField value={value} fullValue={value} />
             ),
             (datum, field, value) => (
-              <DynamicField value={toFixed(value) + '%'} fullValue={value} />
+              <DynamicField
+                value={toFixed(value) + '%'}
+                fullValue={toFixed(value / 100, 3)}
+              />
             ),
             (datum, field, value) => (
-              <DynamicField value={toFixed(value) + '%'} fullValue={value} />
+              <DynamicField
+                value={toFixed(value) + '%'}
+                fullValue={toFixed(value / 100, 3)}
+              />
             )
           ]}
           bodyStyles={[
@@ -149,7 +160,7 @@ export class DiseasePredictions extends Component {
               ])
             })
           ]}
-          bodyClasses={[null, 'small left', 'left']}
+          bodyClasses={['', 'small left', 'left']}
         />
       </section>
     );

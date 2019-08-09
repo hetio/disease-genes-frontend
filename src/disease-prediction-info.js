@@ -25,8 +25,18 @@ export class DiseasePredictionInfo extends Component {
       ['Uniprot id', '', info.uniprot],
       ['status', '', diseasePrediction.status],
       ['other assoc', '', diseasePrediction.other_associations],
-      ['mean prediction', '', toFixed(diseasePrediction.mean_prediction) + '%'],
-      ['prediction', '', toFixed(diseasePrediction.prediction) + '%']
+      [
+        'mean prediction',
+        '',
+        toFixed(diseasePrediction.mean_prediction) + '%',
+        toFixed(diseasePrediction.mean_prediction / 100, 4)
+      ],
+      [
+        'prediction',
+        '',
+        toFixed(diseasePrediction.prediction) + '%',
+        toFixed(diseasePrediction.prediction / 100, 4)
+      ]
     ];
 
     return (

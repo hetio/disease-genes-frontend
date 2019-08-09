@@ -8,6 +8,9 @@ const diseaseInfoUrl =
   'https://raw.githubusercontent.com/dhimmel/het.io-dag-data/54dd91f7c3c378b4064e8a99b022d4c637fe413f/browser/disease-info/';
 const geneInfoUrl =
   'https://raw.githubusercontent.com/dhimmel/het.io-dag-data/54dd91f7c3c378b4064e8a99b022d4c637fe413f/browser/gene-info/';
+const featureInfoUrl =
+  'https://raw.githubusercontent.com/dhimmel/het.io-dag-data/54dd91f7c3c378b4064e8a99b022d4c637fe413f/browser/feature-info/';
+
 const diseasePredictionsUrl =
   'https://raw.githubusercontent.com/dhimmel/het.io-dag-data/54dd91f7c3c378b4064e8a99b022d4c637fe413f/browser/disease-tables/';
 const genePredictionsUrl =
@@ -67,6 +70,14 @@ export async function fetchGeneInfo(geneId) {
   )).json();
 
   return { geneInfo: geneInfo };
+}
+
+export async function fetchFeatureInfo(featureId) {
+  const featureInfo = await (await fetch(
+    featureInfoUrl + featureId.replace(':', '_') + '.json'
+  )).json();
+
+  return { featureInfo: featureInfo };
 }
 
 export async function fetchContributions(

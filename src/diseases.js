@@ -85,7 +85,7 @@ export class Diseases extends Component {
           ]}
           bodyTooltips={[
             (datum, field, value) =>
-              'See predictions for "' + datum.disease_name + '"'
+              'See predictions and info for "' + datum.disease_name + '"'
           ]}
           bodyContents={[
             (datum, field, value) => (
@@ -135,7 +135,7 @@ export class Diseases extends Component {
               ])
             })
           ]}
-          bodyClasses={[null, 'small left', 'left']}
+          bodyClasses={['', 'small left', 'left']}
         />
       </section>
     );

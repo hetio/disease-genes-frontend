@@ -23,7 +23,12 @@ export class GeneInfo extends Component {
       ['Ensembl id', '', info.ensembl],
       ['Uniprot id', '', info.uniprot],
       ['associations', '', gene.associations],
-      ['mean prediction', '', toFixed(gene.mean_prediction) + '%']
+      [
+        'mean prediction',
+        '',
+        toFixed(gene.mean_prediction) + '%',
+        toFixed(gene.mean_prediction / 100, 3)
+      ]
     ];
 
     return (

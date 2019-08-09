@@ -25,7 +25,7 @@ export class Features extends Component {
   // display component
   render() {
     return (
-      <section>
+      <section style={{ display: this.props.visible ? 'block' : 'none' }}>
         <div className='table_attic'>
           <span className='small light'>
             {toComma(this.props.features.length)} entries
@@ -75,7 +75,7 @@ export class Features extends Component {
           headClasses={['', 'small left', 'small left', 'small', 'small']}
           bodyTooltips={[
             (datum, field, value) =>
-              'See predictions for "' + datum.metapath + '"'
+              'See predictions and info for "' + datum.metapath + '"'
           ]}
           bodyContents={[
             (datum, field, value) => (
@@ -99,7 +99,10 @@ export class Features extends Component {
             (datum, field, value) => <DynamicField value={value} />,
             (datum, field, value) => <DynamicField value={value} />,
             (datum, field, value) => (
-              <DynamicField value={toFixed(value * 100) + '%'} />
+              <DynamicField
+                value={toFixed(value * 100) + '%'}
+                fullValue={value}
+              />
             ),
             (datum, field, value) => <DynamicField value={value} />
           ]}
@@ -114,7 +117,7 @@ export class Features extends Component {
               ])
             })
           ]}
-          bodyClasses={[null, 'small left', 'left']}
+          bodyClasses={['', 'small left', 'left']}
         />
       </section>
     );
