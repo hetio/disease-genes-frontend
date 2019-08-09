@@ -25,7 +25,7 @@ export class Diseases extends Component {
   // display component
   render() {
     return (
-      <section>
+      <section style={{ display: this.props.visible ? 'block' : 'none' }}>
         <div className='table_attic'>
           <span className='small light'>
             {toComma(this.props.diseases.length)} entries
@@ -85,7 +85,7 @@ export class Diseases extends Component {
           ]}
           bodyTooltips={[
             (datum, field, value) =>
-              'See predictions for "' + datum.disease_name + '"',
+              'See predictions for "' + datum.disease_name + '"'
           ]}
           bodyContents={[
             (datum, field, value) => (

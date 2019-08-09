@@ -13,29 +13,8 @@ import { toComma } from 'hetio-frontend-components';
 import { toFixed } from 'hetio-frontend-components';
 import { toGradient } from 'hetio-frontend-components';
 import { compareObjects } from 'hetio-frontend-components';
-import { assembleData } from './data.js';
-
-const predictionsUrl =
-  'https://raw.githubusercontent.com/dhimmel/het.io-dag-data/54dd91f7c3c378b4064e8a99b022d4c637fe413f/browser/gene-tables/';
 
 export class GenePredictions extends Component {
-  // initialize component
-  constructor(props) {
-    super(props);
-
-    this.state = {};
-    this.state.predictions = [];
-  }
-
-  // when component updates
-  componentDidUpdate(prevProps) {
-    if (this.props.gene && !compareObjects(prevProps.gene, this.props.gene)) {
-      getPredictions(this.props.gene.gene_code).then((predictions) => {
-        this.setState({ predictions: predictions });
-      });
-    }
-  }
-
   // display component
   render() {
     return (
@@ -115,7 +94,6 @@ export class GenePredictions extends Component {
               'small',
               'small'
             ]}
-            headTooltips={['', '', '', '', '', '', '']}
             bodyContents={[
               (datum, field, value) => (
                 <Button className='check_button'>
@@ -127,6 +105,7 @@ export class GenePredictions extends Component {
                         : 0.15
                     }}
                     icon={faChartBar}
+                    onClick={() => this.props.setGenePrediction(datum)}
                   />
                 </Button>
               ),
@@ -172,10 +151,3 @@ export class GenePredictions extends Component {
   }
 }
 
-async function getPredictions(id) {
-  const predictions = await (await fetch(
-    predictionsUrl + id.replace(':', '_') + '.txt'
-  )).text();
-
-  return assembleData(predictions);
-}

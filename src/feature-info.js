@@ -32,14 +32,14 @@ export class FeatureInfo extends Component {
   // display component
   render() {
     const feature = this.props.feature || {};
-    const name = feature.metapath || '-';
+    const name = feature.metapath;
     const info = this.state.info || {};
     const fields = [
-      ['description', info.description || '-'],
-      ['metapath', info.metapath_long || '-'],
-      ['metric', info.metric || '-'],
+      ['description', info.description],
+      ['metapath', info.metapath_long],
+      ['metric', info.metric],
       ['auroc', toFixed(feature.auroc) + '%'],
-      ['stand coef', feature.standardized_coefficient || '-']
+      ['stand coef', feature.standardized_coefficient]
     ];
 
     return (

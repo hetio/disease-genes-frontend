@@ -2,16 +2,19 @@ import React from 'react';
 import { Component } from 'react';
 
 import { Button } from 'hetio-frontend-components';
-import { fetchData } from './data.js';
+import { fetchMainData } from './data.js';
+import { fetchDiseaseInfo } from './data.js';
+import { fetchDiseasePredictions } from './data.js';
+import { fetchGeneInfo } from './data.js';
+import { fetchGenePredictions } from './data.js';
+import { fetchContributions } from './data.js';
 import { Diseases } from './diseases.js';
-import { DiseasePredictions } from './disease-predictions.js';
 import { DiseaseInfo } from './disease-info.js';
+import { DiseasePredictions } from './disease-predictions.js';
+import { DiseasePredictionInfo } from './disease-prediction-info.js';
+import { DiseaseContributions } from './disease-contributions.js';
 import { Genes } from './genes.js';
 import { GeneInfo } from './gene-info.js';
-import { GenePredictions } from './gene-predictions.js';
-import { Features } from './features.js';
-import { FeatureInfo } from './feature-info.js';
-import { FeaturePredictions } from './feature-predictions.js';
 
 import './app.css';
 
@@ -23,26 +26,30 @@ export class App extends Component {
 
     this.state = {};
     this.state.tab = 'diseases';
-    this.state.disease = null;
-    this.state.gene = null;
-    this.state.feature = null;
     this.state.diseases = [];
     this.state.genes = [];
     this.state.features = [];
+    this.state.disease = null;
+    this.state.gene = null;
+    this.state.diseaseInfo = {};
+    this.state.geneInfo = {};
+    this.state.featureInfo = {};
+    this.state.diseasePredictions = [];
+    this.state.genePredictions = [];
+    this.state.featurePredictions = [];
+    this.state.feature = null;
+    this.state.diseasePrediction = null;
+    this.state.genePrediction = null;
+    this.state.diseasePredictionInfo = {};
+    this.state.genePredictionInfo = {};
+    this.state.diseaseContributions = [];
+    this.state.geneContributions = [];
 
+    fetchMainData().then((results) =>
+      this.setState(results, this.loadStateFromUrl)
+    );
     // listen for back/forward navigation (history)
     window.addEventListener('popstate', this.loadStateFromUrl);
-
-    fetchData().then((results) => {
-      this.setState(
-        {
-          diseases: results.diseases,
-          genes: results.genes,
-          features: results.features
-        },
-        this.loadStateFromUrl
-      );
-    });
   }
 
   // set active tab
@@ -52,12 +59,14 @@ export class App extends Component {
 
   // set selected disease
   setDisease = (disease) => {
-    this.setState({ disease: disease }, this.updateUrl);
+    setDisease(disease).then((results) =>
+      this.setState(results, this.updateUrl)
+    );
   };
 
   // set selected gene
   setGene = (gene) => {
-    this.setState({ gene: gene }, this.updateUrl);
+    setGene(gene).then((results) => this.setState(results, this.updateUrl));
   };
 
   // set selected feature
@@ -65,55 +74,66 @@ export class App extends Component {
     this.setState({ feature: feature }, this.updateUrl);
   };
 
+  // set selected disease prediction
+  setDiseasePrediction = (diseasePrediction) => {
+    setDiseasePrediction(this.state.disease, diseasePrediction).then(
+      (results) => this.setState(results, this.updateUrl)
+    );
+  };
+
+  // set selected gene prediction
+  setGenePrediction = (genePrediction) => {
+    setGenePrediction(this.state.gene, genePrediction).then((results) =>
+      this.setState(results, this.updateUrl)
+    );
+  };
+
   // update url based on state
   updateUrl = () => {
-    const params = new URLSearchParams();
-    params.set('tab', this.state.tab);
-    if (this.state.tab === 'diseases' && this.state.disease)
-      params.set('id', this.state.disease.disease_code.replace(':', '_'));
-    if (this.state.tab === 'genes' && this.state.gene)
-      params.set('id', this.state.gene.gene_code);
-    if (this.state.tab === 'features' && this.state.feature)
-      params.set('id', this.state.feature.feature);
-
-    const url =
-      window.location.origin +
-      window.location.pathname +
-      '?' +
-      params.toString();
-    window.history.pushState({}, '', url);
-
-    if (params.get('id')) document.title = params.get('id');
+    // const params = new URLSearchParams();
+    // params.set('tab', this.state.tab);
+    // if (this.state.tab === 'diseases' && this.state.disease)
+    //   params.set('id', this.state.disease.disease_code);
+    // if (this.state.tab === 'genes' && this.state.gene)
+    //   params.set('id', this.state.gene.gene_code);
+    // if (this.state.tab === 'features' && this.state.feature)
+    //   params.set('id', this.state.feature.feature);
+    // if (this.state.tab === 'diseases' && this.state.diseasePrediction)
+    //   params.set('pred', this.state.diseasePrediction.gene_code);
+    // if (this.state.tab === 'genes' && this.state.genePrediction)
+    //   params.set('pred', this.state.genePrediction.disease_code);
+    // const url =
+    //   window.location.origin +
+    //   window.location.pathname +
+    //   '?' +
+    //   params
+    //     .toString()
+    //     .split(':')
+    //     .join('_');
+    // window.history.pushState({}, '', url);
+    // if (params.get('id'))
+    //   document.title = params.get('id');
   };
 
   // load state from url
   loadStateFromUrl = () => {
-    const params = new URLSearchParams(window.location.search);
-    const newState = {};
-    if (params.get('tab')) newState.tab = params.get('tab');
-    let id = params.get('id');
-    if (newState.tab === 'diseases') {
-      if (id) id = id.replace('_', ':');
-      newState.disease = this.state.diseases.find(
-        (disease) => disease.disease_code === id
-      );
-    }
-    if (newState.tab === 'genes') {
-      newState.gene = this.state.genes.find((gene) => gene.gene_code === id);
-    }
-    if (newState.tab === 'features') {
-      newState.feature = this.state.features.find(
-        (feature) => feature.feature === id
-      );
-    }
-
-    this.setState(newState);
+    // const params = new URLSearchParams(window.location.search);
+    // const tab = params.get('tab');
+    // const id = (params.get('id') || '').replace('_', ':');
+    // const pred = (params.get('pred') || '').replace('_', ':');
+    // const query = {};
+    // if (tab === 'diseases') {
+    //   query.diseaseId = id;
+    //   query.diseasePredictionId = pred;
+    // }
+    // this.setState(newState);
   };
 
   // display component
   render() {
     return (
       <>
+        {console.log(this.state)}
         <Button
           className='tab_button'
           disabled={this.state.tab !== 'diseases'}
@@ -135,44 +155,110 @@ export class App extends Component {
         >
           Features
         </Button>
-        <div
-          style={{ display: this.state.tab === 'diseases' ? 'block' : 'none' }}
-        >
-          <Diseases
-            diseases={this.state.diseases}
-            setDisease={this.setDisease}
-            disease={this.state.disease}
-          />
-          <div style={{ display: this.state.disease ? 'block' : 'none' }}>
-            <DiseaseInfo disease={this.state.disease} />
-            <DiseasePredictions disease={this.state.disease} />
-          </div>
-        </div>
-        <div style={{ display: this.state.tab === 'genes' ? 'block' : 'none' }}>
-          <Genes
-            genes={this.state.genes}
-            setGene={this.setGene}
-            gene={this.state.gene}
-          />
-          <div style={{ display: this.state.gene ? 'block' : 'none' }}>
-            <GeneInfo gene={this.state.gene} />
-            <GenePredictions gene={this.state.gene} />
-          </div>
-        </div>
-        <div
-          style={{ display: this.state.tab === 'features' ? 'block' : 'none' }}
-        >
-          <Features
-            features={this.state.features}
-            setFeature={this.setFeature}
-            feature={this.state.feature}
-          />
-          <div style={{ display: this.state.feature ? 'block' : 'none' }}>
-            <FeatureInfo feature={this.state.feature} />
-            <FeaturePredictions feature={this.state.feature} />
-          </div>
-        </div>
+        <Diseases
+          visible={this.state.tab === 'diseases'}
+          diseases={this.state.diseases}
+          setDisease={this.setDisease}
+          disease={this.state.disease}
+        />
+        <DiseaseInfo
+          visible={this.state.tab === 'diseases'}
+          disease={this.state.disease}
+          diseaseInfo={this.state.diseaseInfo}
+        />
+        <DiseasePredictions
+          visible={this.state.tab === 'diseases'}
+          disease={this.state.disease}
+          diseasePredictions={this.state.diseasePredictions}
+          setDiseasePrediction={this.setDiseasePrediction}
+          diseasePrediction={this.state.diseasePrediction}
+        />
+        <DiseasePredictionInfo
+          visible={this.state.tab === 'diseases'}
+          disease={this.state.disease}
+          diseasePrediction={this.state.diseasePrediction}
+          diseasePredictionInfo={this.state.diseasePredictionInfo}
+        />
+        <DiseaseContributions
+          visible={this.state.tab === 'diseases'}
+          disease={this.state.disease}
+          diseasePrediction={this.state.diseasePrediction}
+          contributions={this.state.contributions}
+        />
+        <Genes
+          visible={this.state.tab === 'genes'}
+          genes={this.state.genes}
+          setGene={this.setGene}
+          gene={this.state.gene}
+        />
+        <GeneInfo
+          visible={this.state.tab === 'genes'}
+          gene={this.state.gene}
+          geneInfo={this.state.geneInfo}
+        />
+        {/*
+        <GenePredictions gene={this.state.gene} />
+        <Features
+          features={this.state.features}
+          setFeature={this.setFeature}
+          feature={this.state.feature}
+        />
+        <FeatureInfo feature={this.state.feature} /> */}
       </>
     );
   }
+}
+
+async function setDisease(disease) {
+  if (!disease)
+    return {};
+
+  const diseaseInfo = await fetchDiseaseInfo(disease.disease_code);
+  const diseasePredictions = await fetchDiseasePredictions(
+    disease.disease_code
+  );
+  return { disease: disease, ...diseaseInfo, ...diseasePredictions };
+}
+
+async function setDiseasePrediction(disease, diseasePrediction) {
+  if (!disease || !diseasePrediction)
+    return {};
+
+  const diseasePredictionInfo =
+    ((await fetchGeneInfo(diseasePrediction.gene_code)) || {}).geneInfo || {};
+  const contributions = await fetchContributions(
+    disease.disease_code,
+    diseasePrediction.gene_code
+  );
+  return {
+    diseasePrediction: diseasePrediction,
+    diseasePredictionInfo: diseasePredictionInfo,
+    ...contributions
+  };
+}
+
+async function setGene(gene) {
+  if (!gene)
+    return {};
+
+  const geneInfo = await fetchGeneInfo(gene.gene_code);
+  const genePredictions = await fetchGenePredictions(gene.gene_code);
+  return { gene: gene, ...geneInfo, ...genePredictions };
+}
+
+async function setGenePrediction(gene, genePrediction) {
+  if (!gene || !genePrediction)
+    return {};
+
+  const genePredictionInfo =
+    ((await fetchGeneInfo(genePrediction.disease_code)) || {}).diseasenfo || {};
+  const contributions = await fetchContributions(
+    genePrediction.disease_code,
+    gene.gene_code
+  );
+  return {
+    genePrediction: genePrediction,
+    genePredictionInfo: genePredictionInfo,
+    ...contributions
+  };
 }

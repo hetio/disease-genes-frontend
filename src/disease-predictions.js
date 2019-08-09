@@ -13,175 +13,145 @@ import { toComma } from 'hetio-frontend-components';
 import { toFixed } from 'hetio-frontend-components';
 import { toGradient } from 'hetio-frontend-components';
 import { compareObjects } from 'hetio-frontend-components';
-import { assembleData } from './data.js';
-
-const predictionsUrl =
-  'https://raw.githubusercontent.com/dhimmel/het.io-dag-data/54dd91f7c3c378b4064e8a99b022d4c637fe413f/browser/disease-tables/';
 
 export class DiseasePredictions extends Component {
   // initialize component
-  constructor(props) {
-    super(props);
-
+  constructor() {
+    super();
     this.state = {};
-    this.state.predictions = [];
-  }
-
-  // when component updates
-  componentDidUpdate(prevProps) {
-    if (
-      this.props.disease &&
-      !compareObjects(prevProps.disease, this.props.disease)
-    ) {
-      getPredictions(this.props.disease.disease_code).then((predictions) => {
-        this.setState({ predictions: predictions });
-      });
-    }
   }
 
   // display component
   render() {
+    if (!this.props.disease)
+      return <></>;
+
     return (
-      <>
+      <section style={{ display: this.props.visible ? 'block' : 'none' }}>
         <hr />
-        <section>
-          <p className='left'>
-            Predictions for{' '}
-            <b>
-              <i>{(this.props.disease || {}).disease_name || ''}</i>
-            </b>
-          </p>
-          <div className='table_attic'>
-            <span className='small light'>
-              {toComma(this.state.predictions.length)} entries
-            </span>
-            <IconButton
-              text={this.state.showMore ? 'collapse' : 'expand'}
-              icon={this.state.showMore ? faAngleLeft : faAngleRight}
-              className='link_button small'
-              onClick={() => this.setState({ showMore: !this.state.showMore })}
-              tooltipText='Expand table'
-            />
-          </div>
-          <Table
-            containerClass={
-              this.state.showMore
-                ? 'table_container_expanded'
-                : 'table_container'
-            }
-            data={this.state.predictions}
-            defaultSortField='prediction'
-            defaultSortUp='true'
-            sortables={[false, true, true, true, true, true, true]}
-            searchAllFields={true}
-            fields={[
-              '',
-              'gene_code',
-              'gene_symbol',
-              'status',
-              'other_associations',
-              'mean_prediction',
-              'prediction'
-            ]}
-            headContents={[
-              '',
-              'ID',
-              'Name',
-              'Status',
-              <>
-                Other
-                <br />
-                Assoc
-              </>,
-              <>
-                Mean
-                <br />
-                Pred
-              </>,
-              'Prediction'
-            ]}
-            headStyles={[
-              { width: 25 },
-              { width: 100 },
-              { width: 100 },
-              { width: 100 },
-              { width: 75 },
-              { width: 75 },
-              { width: 75 }
-            ]}
-            headClasses={[
-              '',
-              'small left',
-              'small left',
-              'small',
-              'small',
-              'small',
-              'small'
-            ]}
-            headTooltips={['', '', '', '', '', '', '']}
-            bodyContents={[
-              (datum, field, value) => (
-                <Button className='check_button'>
-                  <FontAwesomeIcon
-                    className='fa-xs'
-                    style={{
-                      opacity: compareObjects(
-                        datum,
-                        this.props.diseasePrediction
-                      )
-                        ? 1
-                        : 0.15
-                    }}
-                    icon={faChartBar}
-                  />
-                </Button>
-              ),
-              (datum, field, value) => (
-                <DynamicField value={<code>{value}</code>} fullValue={value} />
-              ),
-              (datum, field, value) => <DynamicField value={value} />,
-              (datum, field, value) => <DynamicField value={value} />,
-              (datum, field, value) => (
-                <DynamicField value={value} fullValue={value} />
-              ),
-              (datum, field, value) => (
-                <DynamicField value={toFixed(value) + '%'} fullValue={value} />
-              ),
-              (datum, field, value) => (
-                <DynamicField value={toFixed(value) + '%'} fullValue={value} />
-              )
-            ]}
-            bodyStyles={[
-              null,
-              null,
-              null,
-              null,
-              null,
-              (datum, field, value) => ({
-                background: toGradient(value, [
-                  [0, 'rgba(255, 255, 255, 0)'],
-                  [25, 'rgba(233, 30, 99, 0.25)']
-                ])
-              }),
-              (datum, field, value) => ({
-                background: toGradient(value, [
-                  [0, 'rgba(255, 255, 255, 0)'],
-                  [100, 'rgba(233, 30, 99, 0.5)']
-                ])
-              })
-            ]}
-            bodyClasses={['small left', 'left']}
+        <p className='left'>
+          Predictions for{' '}
+          <b>
+            <i>{(this.props.disease || {}).disease_name || ''}</i>
+          </b>
+        </p>
+        <div className='table_attic'>
+          <span className='small light'>
+            {toComma(this.props.diseasePredictions.length)} entries
+          </span>
+          <IconButton
+            text={this.state.showMore ? 'collapse' : 'expand'}
+            icon={this.state.showMore ? faAngleLeft : faAngleRight}
+            className='link_button small'
+            onClick={() => this.setState({ showMore: !this.state.showMore })}
+            tooltipText='Expand table'
           />
-        </section>
-      </>
+        </div>
+        <Table
+          containerClass={
+            this.state.showMore ? 'table_container_expanded' : 'table_container'
+          }
+          data={this.props.diseasePredictions}
+          defaultSortField='prediction'
+          defaultSortUp='true'
+          sortables={[false, true, true, true, true, true, true]}
+          searchAllFields={true}
+          fields={[
+            '',
+            'gene_code',
+            'gene_symbol',
+            'status',
+            'other_associations',
+            'mean_prediction',
+            'prediction'
+          ]}
+          headContents={[
+            '',
+            'ID',
+            'Name',
+            'Status',
+            <>
+              Other
+              <br />
+              Assoc
+            </>,
+            <>
+              Mean
+              <br />
+              Pred
+            </>,
+            'Prediction'
+          ]}
+          headStyles={[
+            { width: 25 },
+            { width: 100 },
+            { width: 100 },
+            { width: 100 },
+            { width: 75 },
+            { width: 75 },
+            { width: 75 }
+          ]}
+          headClasses={[
+            '',
+            'small left',
+            'small left',
+            'small',
+            'small',
+            'small',
+            'small'
+          ]}
+          bodyContents={[
+            (datum, field, value) => (
+              <Button className='check_button'>
+                <FontAwesomeIcon
+                  className='fa-xs'
+                  style={{
+                    opacity: compareObjects(datum, this.props.diseasePrediction)
+                      ? 1
+                      : 0.15
+                  }}
+                  icon={faChartBar}
+                  onClick={() => this.props.setDiseasePrediction(datum)}
+                />
+              </Button>
+            ),
+            (datum, field, value) => (
+              <DynamicField value={<code>{value}</code>} fullValue={value} />
+            ),
+            (datum, field, value) => <DynamicField value={value} />,
+            (datum, field, value) => <DynamicField value={value} />,
+            (datum, field, value) => (
+              <DynamicField value={value} fullValue={value} />
+            ),
+            (datum, field, value) => (
+              <DynamicField value={toFixed(value) + '%'} fullValue={value} />
+            ),
+            (datum, field, value) => (
+              <DynamicField value={toFixed(value) + '%'} fullValue={value} />
+            )
+          ]}
+          bodyStyles={[
+            null,
+            null,
+            null,
+            null,
+            null,
+            (datum, field, value) => ({
+              background: toGradient(value, [
+                [0, 'rgba(255, 255, 255, 0)'],
+                [25, 'rgba(233, 30, 99, 0.25)']
+              ])
+            }),
+            (datum, field, value) => ({
+              background: toGradient(value, [
+                [0, 'rgba(255, 255, 255, 0)'],
+                [100, 'rgba(233, 30, 99, 0.5)']
+              ])
+            })
+          ]}
+          bodyClasses={[null, 'small left', 'left']}
+        />
+      </section>
     );
   }
-}
-
-async function getPredictions(id) {
-  const predictions = await (await fetch(
-    predictionsUrl + id.replace(':', '_') + '.txt'
-  )).text();
-
-  return assembleData(predictions);
 }

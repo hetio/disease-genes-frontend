@@ -9,33 +9,8 @@ import { Table } from 'hetio-frontend-components';
 import { toComma } from 'hetio-frontend-components';
 import { toFixed } from 'hetio-frontend-components';
 import { toGradient } from 'hetio-frontend-components';
-import { compareObjects } from 'hetio-frontend-components';
-import { assembleData } from './data.js';
-
-const predictionsUrl =
-  'https://raw.githubusercontent.com/dhimmel/het.io-dag-data/54dd91f7c3c378b4064e8a99b022d4c637fe413f/browser/feature-tables/';
 
 export class FeaturePredictions extends Component {
-  // initialize component
-  constructor(props) {
-    super(props);
-
-    this.state = {};
-    this.state.predictions = [];
-  }
-
-  // when component updates
-  componentDidUpdate(prevProps) {
-    if (
-      this.props.feature &&
-      !compareObjects(prevProps.feature, this.props.feature)
-    ) {
-      getPredictions(this.props.feature.feature).then((predictions) => {
-        this.setState({ predictions: predictions });
-      });
-    }
-  }
-
   // display component
   render() {
     return (
@@ -157,12 +132,4 @@ export class FeaturePredictions extends Component {
       </>
     );
   }
-}
-
-async function getPredictions(id) {
-  const predictions = await (await fetch(
-    predictionsUrl + id.replace(':', '_') + '.txt'
-  )).text();
-
-  return assembleData(predictions);
 }
