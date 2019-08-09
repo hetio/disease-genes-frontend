@@ -1,11 +1,8 @@
 import React from 'react';
 import { Component } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
-import { faChartBar } from '@fortawesome/free-solid-svg-icons';
 
-import { Button } from 'hetio-frontend-components';
 import { IconButton } from 'hetio-frontend-components';
 import { DynamicField } from 'hetio-frontend-components';
 import { Table } from 'hetio-frontend-components';
@@ -16,9 +13,9 @@ import { compareObjects } from 'hetio-frontend-components';
 import { assembleData } from './data.js';
 
 const predictionsUrl =
-  'https://raw.githubusercontent.com/dhimmel/het.io-dag-data/54dd91f7c3c378b4064e8a99b022d4c637fe413f/browser/disease-tables/';
+  'https://raw.githubusercontent.com/dhimmel/het.io-dag-data/54dd91f7c3c378b4064e8a99b022d4c637fe413f/browser/feature-tables/';
 
-export class DiseasePredictions extends Component {
+export class FeaturePredictions extends Component {
   // initialize component
   constructor(props) {
     super(props);
@@ -30,10 +27,10 @@ export class DiseasePredictions extends Component {
   // when component updates
   componentDidUpdate(prevProps) {
     if (
-      this.props.disease &&
-      !compareObjects(prevProps.disease, this.props.disease)
+      this.props.feature &&
+      !compareObjects(prevProps.feature, this.props.feature)
     ) {
-      getPredictions(this.props.disease.disease_code).then((predictions) => {
+      getPredictions(this.props.feature.feature).then((predictions) => {
         this.setState({ predictions: predictions });
       });
     }
@@ -48,7 +45,7 @@ export class DiseasePredictions extends Component {
           <p className='left'>
             Predictions for{' '}
             <b>
-              <i>{(this.props.disease || {}).disease_name || ''}</i>
+              <i>{(this.props.feature || {}).metapath || ''}</i>
             </b>
           </p>
           <div className='table_attic'>
@@ -72,45 +69,41 @@ export class DiseasePredictions extends Component {
             data={this.state.predictions}
             defaultSortField='prediction'
             defaultSortUp='true'
-            sortables={[false, true, true, true, true, true, true]}
+            sortables={[true, true, true, true, true, true]}
             searchAllFields={true}
             fields={[
-              '',
-              'gene_code',
-              'gene_symbol',
-              'status',
-              'other_associations',
-              'mean_prediction',
-              'prediction'
+              'disease_code',
+              'disease_name',
+              'pathophysiology',
+              'associations',
+              'model_auroc',
+              'auroc'
             ]}
             headContents={[
-              '',
               'ID',
               'Name',
-              'Status',
               <>
-                Other
+                Patho-
                 <br />
-                Assoc
+                physiology
               </>,
+              'Assoc',
+              'AUROC',
               <>
-                Mean
+                Model
                 <br />
-                Pred
-              </>,
-              'Prediction'
+                AUROC
+              </>
             ]}
             headStyles={[
-              { width: 25 },
-              { width: 100 },
-              { width: 100 },
+              { width: 75 },
+              { width: 150 },
               { width: 100 },
               { width: 75 },
               { width: 75 },
               { width: 75 }
             ]}
             headClasses={[
-              '',
               'small left',
               'small left',
               'small',
@@ -118,24 +111,7 @@ export class DiseasePredictions extends Component {
               'small',
               'small'
             ]}
-            headTooltips={['', '', '', '', '', '', '']}
             bodyContents={[
-              (datum, field, value) => (
-                <Button className='check_button'>
-                  <FontAwesomeIcon
-                    className='fa-xs'
-                    style={{
-                      opacity: compareObjects(
-                        datum,
-                        this.props.diseasePrediction
-                      )
-                        ? 1
-                        : 0.15
-                    }}
-                    icon={faChartBar}
-                  />
-                </Button>
-              ),
               (datum, field, value) => (
                 <DynamicField value={<code>{value}</code>} fullValue={value} />
               ),
@@ -145,10 +121,16 @@ export class DiseasePredictions extends Component {
                 <DynamicField value={value} fullValue={value} />
               ),
               (datum, field, value) => (
-                <DynamicField value={toFixed(value) + '%'} fullValue={value} />
+                <DynamicField
+                  value={toFixed(value * 100) + '%'}
+                  fullValue={value}
+                />
               ),
               (datum, field, value) => (
-                <DynamicField value={toFixed(value) + '%'} fullValue={value} />
+                <DynamicField
+                  value={toFixed(value * 100) + '%'}
+                  fullValue={value}
+                />
               )
             ]}
             bodyStyles={[
@@ -156,15 +138,14 @@ export class DiseasePredictions extends Component {
               null,
               null,
               null,
-              null,
               (datum, field, value) => ({
-                background: toGradient(value, [
+                background: toGradient(value * 100, [
                   [0, 'rgba(255, 255, 255, 0)'],
-                  [25, 'rgba(233, 30, 99, 0.25)']
+                  [100, 'rgba(233, 30, 99, 0.5)']
                 ])
               }),
               (datum, field, value) => ({
-                background: toGradient(value, [
+                background: toGradient(value * 100, [
                   [0, 'rgba(255, 255, 255, 0)'],
                   [100, 'rgba(233, 30, 99, 0.5)']
                 ])

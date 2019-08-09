@@ -98,13 +98,13 @@ export class GenePredictions extends Component {
               'Prediction'
             ]}
             headStyles={[
-              { width: 35 },
+              { width: 25 },
               { width: 100 },
               { width: 100 },
               { width: 100 },
-              { width: 85 },
-              { width: 85 },
-              { width: 85 }
+              { width: 75 },
+              { width: 75 },
+              { width: 75 }
             ]}
             headClasses={[
               '',
@@ -118,12 +118,7 @@ export class GenePredictions extends Component {
             headTooltips={['', '', '', '', '', '', '']}
             bodyContents={[
               (datum, field, value) => (
-                <Button
-                  className='check_button'
-                  onClick={() => {
-                    this.props.setDiseasePrediction(datum);
-                  }}
-                >
+                <Button className='check_button'>
                   <FontAwesomeIcon
                     className='fa-xs'
                     style={{

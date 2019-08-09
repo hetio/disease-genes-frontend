@@ -14,7 +14,7 @@ import { toFixed } from 'hetio-frontend-components';
 import { toGradient } from 'hetio-frontend-components';
 import { compareObjects } from 'hetio-frontend-components';
 
-export class Diseases extends Component {
+export class Features extends Component {
   // initialize component
   constructor() {
     super();
@@ -28,7 +28,7 @@ export class Diseases extends Component {
       <section>
         <div className='table_attic'>
           <span className='small light'>
-            {toComma(this.props.diseases.length)} entries
+            {toComma(this.props.features.length)} entries
           </span>
           <IconButton
             text={this.state.showMore ? 'collapse' : 'expand'}
@@ -42,63 +42,53 @@ export class Diseases extends Component {
           containerClass={
             this.state.showMore ? 'table_container_expanded' : 'table_container'
           }
-          data={this.props.diseases}
-          defaultSortField='auroc'
+          data={this.props.features}
+          defaultSortField='standardized_coefficient'
           defaultSortUp='true'
           sortables={[false, true, true, true, true, true]}
           searchAllFields={true}
           fields={[
             '',
-            'disease_code',
-            'disease_name',
-            'pathophysiology',
-            'associations',
-            'auroc'
+            'metapath',
+            'metric',
+            'auroc',
+            'standardized_coefficient'
           ]}
           headContents={[
             '',
-            'ID',
-            'Name',
+            'Metapath',
+            'Metric',
+            'AUROC',
             <>
-              Patho-
+              Stand
               <br />
-              physiology
-            </>,
-            'Assoc',
-            'AUROC'
+              Coef
+            </>
           ]}
           headStyles={[
             { width: 25 },
             { width: 100 },
-            { width: 200 },
             { width: 100 },
             { width: 75 },
             { width: 75 }
           ]}
-          headClasses={[
-            '',
-            'small left',
-            'small left',
-            'small',
-            'small',
-            'small'
-          ]}
+          headClasses={['', 'small left', 'small left', 'small', 'small']}
           bodyTooltips={[
             (datum, field, value) =>
-              'See predictions for "' + datum.disease_name + '"',
+              'See predictions for "' + datum.metapath + '"'
           ]}
           bodyContents={[
             (datum, field, value) => (
               <Button
                 className='check_button'
                 onClick={() => {
-                  this.props.setDisease(datum);
+                  this.props.setFeature(datum);
                 }}
               >
                 <FontAwesomeIcon
                   className='fa-xs'
                   style={{
-                    opacity: compareObjects(datum, this.props.disease)
+                    opacity: compareObjects(datum, this.props.feature)
                       ? 1
                       : 0.15
                   }}
@@ -106,32 +96,21 @@ export class Diseases extends Component {
                 />
               </Button>
             ),
-            (datum, field, value) => (
-              <DynamicField value={<code>{value}</code>} fullValue={value} />
-            ),
             (datum, field, value) => <DynamicField value={value} />,
             (datum, field, value) => <DynamicField value={value} />,
             (datum, field, value) => (
-              <DynamicField value={toComma(value)} fullValue={value} />
+              <DynamicField value={toFixed(value * 100) + '%'} />
             ),
-            (datum, field, value) => (
-              <DynamicField
-                value={toFixed(value * 100) + '%'}
-                fullValue={value}
-              />
-            )
+            (datum, field, value) => <DynamicField value={value} />
           ]}
           bodyStyles={[
             null,
             null,
             null,
-            null,
-            null,
             (datum, field, value) => ({
               background: toGradient(value * 100, [
-                [0, 'rgba(255, 255, 255, 0)'],
                 [50, 'rgba(255, 255, 255, 0)'],
-                [100, 'rgba(233, 30, 99, 0.5)']
+                [75, 'rgba(233, 30, 99, 0.5)']
               ])
             })
           ]}

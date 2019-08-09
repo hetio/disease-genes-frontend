@@ -66,7 +66,7 @@ export class Genes extends Component {
             </>
           ]}
           headStyles={[
-            { width: 35 },
+            { width: 25 },
             { width: 100 },
             { width: 100 },
             { width: 75 },

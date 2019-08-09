@@ -9,6 +9,9 @@ import { DiseaseInfo } from './disease-info.js';
 import { Genes } from './genes.js';
 import { GeneInfo } from './gene-info.js';
 import { GenePredictions } from './gene-predictions.js';
+import { Features } from './features.js';
+import { FeatureInfo } from './feature-info.js';
+import { FeaturePredictions } from './feature-predictions.js';
 
 import './app.css';
 
@@ -34,7 +37,8 @@ export class App extends Component {
       this.setState(
         {
           diseases: results.diseases,
-          genes: results.genes
+          genes: results.genes,
+          features: results.features
         },
         this.loadStateFromUrl
       );
@@ -56,6 +60,11 @@ export class App extends Component {
     this.setState({ gene: gene }, this.updateUrl);
   };
 
+  // set selected feature
+  setFeature = (feature) => {
+    this.setState({ feature: feature }, this.updateUrl);
+  };
+
   // update url based on state
   updateUrl = () => {
     const params = new URLSearchParams();
@@ -64,6 +73,8 @@ export class App extends Component {
       params.set('id', this.state.disease.disease_code.replace(':', '_'));
     if (this.state.tab === 'genes' && this.state.gene)
       params.set('id', this.state.gene.gene_code);
+    if (this.state.tab === 'features' && this.state.feature)
+      params.set('id', this.state.feature.feature);
 
     const url =
       window.location.origin +
@@ -89,6 +100,11 @@ export class App extends Component {
     }
     if (newState.tab === 'genes') {
       newState.gene = this.state.genes.find((gene) => gene.gene_code === id);
+    }
+    if (newState.tab === 'features') {
+      newState.feature = this.state.features.find(
+        (feature) => feature.feature === id
+      );
     }
 
     this.setState(newState);
@@ -141,6 +157,19 @@ export class App extends Component {
           <div style={{ display: this.state.gene ? 'block' : 'none' }}>
             <GeneInfo gene={this.state.gene} />
             <GenePredictions gene={this.state.gene} />
+          </div>
+        </div>
+        <div
+          style={{ display: this.state.tab === 'features' ? 'block' : 'none' }}
+        >
+          <Features
+            features={this.state.features}
+            setFeature={this.setFeature}
+            feature={this.state.feature}
+          />
+          <div style={{ display: this.state.feature ? 'block' : 'none' }}>
+            <FeatureInfo feature={this.state.feature} />
+            <FeaturePredictions feature={this.state.feature} />
           </div>
         </div>
       </>
