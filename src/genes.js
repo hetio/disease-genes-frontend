@@ -25,7 +25,7 @@ export class Genes extends Component {
   // display component
   render() {
     return (
-      <section>
+      <section style={{ display: this.props.visible ? 'block' : 'none' }}>
         <div className='table_attic'>
           <span className='small light'>
             {toComma(this.props.genes.length)} entries
@@ -75,7 +75,7 @@ export class Genes extends Component {
           headClasses={['', 'small left', 'small left', 'small', 'small']}
           bodyTooltips={[
             (datum, field, value) =>
-              'See predictions for "' + datum.gene_name + '"'
+              'See predictions and info for "' + datum.gene_symbol + '"'
           ]}
           bodyContents={[
             (datum, field, value) => (
@@ -102,7 +102,7 @@ export class Genes extends Component {
             (datum, field, value) => (
               <DynamicField
                 value={toFixed(value) + '%'}
-                fullValue={value}
+                fullValue={toFixed(value / 100, 3)}
               />
             )
           ]}
@@ -118,7 +118,7 @@ export class Genes extends Component {
               ])
             })
           ]}
-          bodyClasses={[null, 'small left', 'left']}
+          bodyClasses={['', 'small left', 'left']}
         />
       </section>
     );
