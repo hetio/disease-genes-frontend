@@ -28,7 +28,10 @@ export class DiseasePredictions extends Component {
       return <></>;
 
     return (
-      <div className='app_section' style={{ display: this.props.visible ? 'block' : 'none' }}>
+      <div
+        className='app_section'
+        style={{ display: this.props.visible ? 'block' : 'none' }}
+      >
         <hr />
         <p className='left'>
           Predictions for{' '}
@@ -107,7 +110,10 @@ export class DiseasePredictions extends Component {
           ]}
           bodyContents={[
             (datum, field, value) => (
-              <Button className='check_button'>
+              <Button
+                className='check_button'
+                onClick={() => this.props.setDiseasePrediction(datum)}
+              >
                 <FontAwesomeIcon
                   className='fa-xs'
                   style={{
@@ -116,7 +122,6 @@ export class DiseasePredictions extends Component {
                       : 0.15
                   }}
                   icon={faChartBar}
-                  onClick={() => this.props.setDiseasePrediction(datum)}
                 />
               </Button>
             ),
