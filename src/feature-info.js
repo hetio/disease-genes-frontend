@@ -22,7 +22,10 @@ export class FeatureInfo extends Component {
     ];
 
     return (
-      <div className='app_section' style={{ display: this.props.visible ? 'block' : 'none' }}>
+      <div
+        className='app_section'
+        style={{ display: this.props.visible ? 'block' : 'none' }}
+      >
         <hr />
         <p className='left'>
           Info about{' '}

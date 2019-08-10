@@ -28,7 +28,10 @@ export class FeaturePredictions extends Component {
       return <></>;
 
     return (
-      <div className='app_section' style={{ display: this.props.visible ? 'block' : 'none' }}>
+      <div
+        className='app_section'
+        style={{ display: this.props.visible ? 'block' : 'none' }}
+      >
         <hr />
         <p className='left'>
           Predictions for{' '}
@@ -102,12 +105,14 @@ export class FeaturePredictions extends Component {
             'small'
           ]}
           bodyTooltips={[
-            (datum, field, value) =>
-              'See info for "' + datum.disease_name + '"'
+            (datum, field, value) => 'See info for "' + datum.disease_name + '"'
           ]}
           bodyContents={[
             (datum, field, value) => (
-              <Button className='check_button'>
+              <Button
+                className='check_button'
+                onClick={() => this.props.setFeaturePrediction(datum)}
+              >
                 <FontAwesomeIcon
                   className='fa-xs'
                   style={{
@@ -116,7 +121,6 @@ export class FeaturePredictions extends Component {
                       : 0.15
                   }}
                   icon={faEye}
-                  onClick={() => this.props.setFeaturePrediction(datum)}
                 />
               </Button>
             ),
