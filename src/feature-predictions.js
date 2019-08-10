@@ -28,7 +28,7 @@ export class FeaturePredictions extends Component {
       return <></>;
 
     return (
-      <section style={{ display: this.props.visible ? 'block' : 'none' }}>
+      <div className='app_section' style={{ display: this.props.visible ? 'block' : 'none' }}>
         <hr />
         <p className='left'>
           Predictions for{' '}
@@ -162,7 +162,7 @@ export class FeaturePredictions extends Component {
           ]}
           bodyClasses={['', 'small left', 'left']}
         />
-      </section>
+      </div>
     );
   }
 }

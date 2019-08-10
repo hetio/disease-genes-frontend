@@ -9,7 +9,7 @@ export class DiseaseContributions extends Component {
       return <></>;
 
     return (
-      <section style={{ display: this.props.visible ? 'block' : 'none' }}>
+      <div className='app_section' style={{ display: this.props.visible ? 'block' : 'none' }}>
         <hr />
         <p className='left'>
           Contributions for{' '}
@@ -33,7 +33,7 @@ export class DiseaseContributions extends Component {
             }
           }}
         />
-      </section>
+      </div>
     );
   }
 }

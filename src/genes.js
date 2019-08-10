@@ -25,7 +25,7 @@ export class Genes extends Component {
   // display component
   render() {
     return (
-      <section style={{ display: this.props.visible ? 'block' : 'none' }}>
+      <div className='app_section' style={{ display: this.props.visible ? 'block' : 'none' }}>
         <div className='table_attic'>
           <span className='small light'>
             {toComma(this.props.genes.length)} entries
@@ -120,7 +120,7 @@ export class Genes extends Component {
           ]}
           bodyClasses={['', 'small left', 'left']}
         />
-      </section>
+      </div>
     );
   }
 }
