@@ -37,6 +37,7 @@ export class GeneContributions extends Component {
           options={{
             legend: 'none',
             backgroundColor: 'none',
+            colors: ['#02b3e4'],
             title:
               'Components of the predicted association between ' +
               diseaseName +
