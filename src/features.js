@@ -14,6 +14,8 @@ import { toFixed } from 'hetio-frontend-components';
 import { toGradient } from 'hetio-frontend-components';
 import { compareObjects } from 'hetio-frontend-components';
 
+import tooltipText from './tooltip-text.json';
+
 export class Features extends Component {
   // initialize component
   constructor() {
@@ -76,6 +78,13 @@ export class Features extends Component {
             { width: 75 }
           ]}
           headClasses={['', 'small left', 'small left', 'small', 'small']}
+          headTooltips={[
+            '',
+            tooltipText['metapath_abbreviation'],
+            tooltipText['metapath_metric'],
+            tooltipText['metapath_auroc'],
+            tooltipText['metapath_coefficient']
+          ]}
           bodyTooltips={[
             (datum, field, value) =>
               'See predictions and info for "' + datum.metapath + '"'

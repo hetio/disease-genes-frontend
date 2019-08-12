@@ -4,6 +4,8 @@ import { Component } from 'react';
 import { toFixed } from 'hetio-frontend-components';
 import { InfoTable } from 'hetio-frontend-components';
 
+import tooltipText from './tooltip-text.json';
+
 export class DiseaseInfo extends Component {
   // display component
   render() {
@@ -14,12 +16,25 @@ export class DiseaseInfo extends Component {
     const name = disease.disease_name;
     const info = (this.props.diseaseInfo || {}).xref || {};
     const bodyContents = [
-      ['Dis. Ont. id', '', disease.disease_code],
-      ['EFO id', '', info.EFO],
-      ['UMLS id', '', info.UMLS_CUI],
-      ['pathophysiology', '', disease.pathophysiology],
-      ['associations', '', disease.associations],
-      ['auroc', '', toFixed(disease.auroc * 100) + '%', disease.auroc]
+      ['Dis. Ont. id', tooltipText['disease_id'], disease.disease_code],
+      ['EFO id', tooltipText['disease_efo_id'], info.EFO],
+      ['UMLS id', tooltipText['disease_umls_id'], info.UMLS_CUI],
+      [
+        'pathophysiology',
+        tooltipText['disease_pathophysiology'],
+        disease.pathophysiology
+      ],
+      [
+        'associations',
+        tooltipText['disease_associations'],
+        disease.associations
+      ],
+      [
+        'auroc',
+        tooltipText['auroc'],
+        toFixed(disease.auroc * 100) + '%',
+        disease.auroc
+      ]
     ];
 
     return (

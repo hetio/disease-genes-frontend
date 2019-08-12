@@ -4,6 +4,8 @@ import { Component } from 'react';
 import { toFixed } from 'hetio-frontend-components';
 import { InfoTable } from 'hetio-frontend-components';
 
+import tooltipText from './tooltip-text.json';
+
 export class GeneInfo extends Component {
   // display component
   render() {
@@ -16,16 +18,17 @@ export class GeneInfo extends Component {
     const bodyContents = [
       [
         'aliases',
+        tooltipText['gene_aliases'],
         info.aliases && info.aliases.length ? info.aliases.join(', ') : ''
       ],
-      ['HGNC id', '', gene.gene_code],
-      ['Entrez id', '', info.entrez],
-      ['Ensembl id', '', info.ensembl],
-      ['Uniprot id', '', info.uniprot],
-      ['associations', '', gene.associations],
+      ['HGNC id', tooltipText['gene_id'], gene.gene_code],
+      ['Entrez id', tooltipText['gene_entrez_id'], info.entrez],
+      ['Ensembl id', tooltipText['gene_ensembl_id'], info.ensembl],
+      ['Uniprot id', tooltipText['gene_uniprot_id'], info.uniprot],
+      ['associations', tooltipText['gene_associations'], gene.associations],
       [
         'mean prediction',
-        '',
+        tooltipText['gene_mean_prediction'],
         toFixed(gene.mean_prediction) + '%',
         toFixed(gene.mean_prediction / 100, 3)
       ]

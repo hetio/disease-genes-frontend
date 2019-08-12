@@ -4,6 +4,8 @@ import { Component } from 'react';
 import { toFixed } from 'hetio-frontend-components';
 import { InfoTable } from 'hetio-frontend-components';
 
+import tooltipText from './tooltip-text.json';
+
 export class GenePredictionInfo extends Component {
   // display component
   render() {
@@ -14,15 +16,23 @@ export class GenePredictionInfo extends Component {
     const name = genePrediction.disease_name;
     const info = (this.props.genePredictionInfo || {}).xref || {};
     const bodyContents = [
-      ['Dis. Ont. id', '', genePrediction.disease_code],
-      ['EFO id', '', info.EFO],
-      ['UMLS id', '', info.UMLS_CUI],
-      ['pathophysiology', '', genePrediction.pathophysiology],
-      ['status', '', genePrediction.status],
-      ['other assoc', '', genePrediction.other_associations],
+      ['Dis. Ont. id', tooltipText['disease_id'], genePrediction.disease_code],
+      ['EFO id', tooltipText['disease_efo_id'], info.EFO],
+      ['UMLS id', tooltipText['disease_umls_id'], info.UMLS_CUI],
+      [
+        'pathophysiology',
+        tooltipText['disease_pathophysiology'],
+        genePrediction.pathophysiology
+      ],
+      ['status', tooltipText['disease_status'], genePrediction.status],
+      [
+        'other assoc',
+        tooltipText['disease_other_associations'],
+        genePrediction.other_associations
+      ],
       [
         'prediction',
-        '',
+        tooltipText['disease_prediction'],
         toFixed(genePrediction.prediction) + '%',
         toFixed(genePrediction.prediction / 100, 3)
       ]
