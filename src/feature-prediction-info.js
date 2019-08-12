@@ -4,6 +4,8 @@ import { Component } from 'react';
 import { toFixed } from 'hetio-frontend-components';
 import { InfoTable } from 'hetio-frontend-components';
 
+import tooltipText from './tooltip-text.json';
+
 export class FeaturePredictionInfo extends Component {
   // display component
   render() {
@@ -14,20 +16,32 @@ export class FeaturePredictionInfo extends Component {
     const name = featurePrediction.disease_name;
     const info = (this.props.featurePredictionInfo || {}).xref || {};
     const bodyContents = [
-      ['Dis. Ont. id', '', featurePrediction.disease_code],
-      ['EFO id', '', info.EFO],
-      ['UMLS id', '', info.UMLS_CUI],
-      ['pathophysiology', '', featurePrediction.pathophysiology],
-      ['associations', '', featurePrediction.associations],
+      [
+        'Dis. Ont. id',
+        tooltipText['disease_id'],
+        featurePrediction.disease_code
+      ],
+      ['EFO id', tooltipText['disease_efo_id'], info.EFO],
+      ['UMLS id', tooltipText['disease_umls_id'], info.UMLS_CUI],
+      [
+        'pathophysiology',
+        tooltipText['disease_pathophysiology'],
+        featurePrediction.pathophysiology
+      ],
+      [
+        'associations',
+        tooltipText['disease_associations'],
+        featurePrediction.associations
+      ],
       [
         'auroc',
-        '',
+        tooltipText['auroc'],
         toFixed(featurePrediction.auroc * 100) + '%',
         featurePrediction.auroc
       ],
       [
         'model auroc',
-        '',
+        tooltipText['model_auroc'],
         toFixed(featurePrediction.model_auroc * 100) + '%',
         featurePrediction.model_auroc
       ]

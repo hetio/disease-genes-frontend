@@ -14,6 +14,8 @@ import { toFixed } from 'hetio-frontend-components';
 import { toGradient } from 'hetio-frontend-components';
 import { compareObjects } from 'hetio-frontend-components';
 
+import tooltipText from './tooltip-text.json';
+
 export class Genes extends Component {
   // initialize component
   constructor() {
@@ -76,6 +78,13 @@ export class Genes extends Component {
             { width: 75 }
           ]}
           headClasses={['', 'small left', 'small left', 'small', 'small']}
+          headTooltips={[
+            '',
+            tooltipText['gene_id'],
+            tooltipText['gene_name'],
+            tooltipText['gene_associations'],
+            tooltipText['gene_mean_prediction']
+          ]}
           bodyTooltips={[
             (datum, field, value) =>
               'See predictions and info for "' + datum.gene_symbol + '"'

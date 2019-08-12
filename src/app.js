@@ -161,6 +161,7 @@ export class App extends Component {
           className='tab_button'
           disabled={this.state.tab !== 'diseases'}
           onClick={() => this.setTab('diseases')}
+          tooltipText='Select a disease and show predictions for all genes'
         >
           Diseases
         </Button>
@@ -168,6 +169,7 @@ export class App extends Component {
           className='tab_button'
           disabled={this.state.tab !== 'genes'}
           onClick={() => this.setTab('genes')}
+          tooltipText='Select a gene and show predictions for all diseases'
         >
           Genes
         </Button>
@@ -175,6 +177,9 @@ export class App extends Component {
           className='tab_button'
           disabled={this.state.tab !== 'features'}
           onClick={() => this.setTab('features')}
+          tooltipText='Browse features that measure how common different types
+          of paths (metapaths) that connect genes to disease are and their
+          ability to predict associations'
         >
           Features
         </Button>
@@ -381,7 +386,10 @@ async function loadStateFromUrl(state) {
         );
         newState = {
           ...newState,
-          ...(await setDiseasePrediction(newState.diseasePrediction))
+          ...(await setDiseasePrediction(
+            newState.disease,
+            newState.diseasePrediction
+          ))
         };
       }
     }
@@ -399,7 +407,7 @@ async function loadStateFromUrl(state) {
         );
         newState = {
           ...newState,
-          ...(await setGenePrediction(newState.genePrediction))
+          ...(await setGenePrediction(newState.gene, newState.genePrediction))
         };
       }
     }

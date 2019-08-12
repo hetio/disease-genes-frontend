@@ -4,6 +4,8 @@ import { Component } from 'react';
 import { toFixed } from 'hetio-frontend-components';
 import { InfoTable } from 'hetio-frontend-components';
 
+import tooltipText from './tooltip-text.json';
+
 export class FeatureInfo extends Component {
   // display component
   render() {
@@ -14,11 +16,20 @@ export class FeatureInfo extends Component {
     const name = feature.metapath;
     const info = this.props.featureInfo || {};
     const bodyContents = [
-      ['description', '', info.description],
-      ['metapath', '', info.metapath_long],
-      ['metric', '', info.metric],
-      ['auroc', '', toFixed(feature.auroc * 100) + '%', feature.auroc],
-      ['stand coef', '', feature.standardized_coefficient]
+      ['description', tooltipText['metapath_description'], info.description],
+      ['metapath', tooltipText['metapath_full'], info.metapath_long],
+      ['metric', tooltipText['metapath_metric'], info.metric],
+      [
+        'auroc',
+        tooltipText['metapath_auroc'],
+        toFixed(feature.auroc * 100) + '%',
+        feature.auroc
+      ],
+      [
+        'stand coef',
+        tooltipText['metapath_coefficient'],
+        feature.standardized_coefficient
+      ]
     ];
 
     return (
