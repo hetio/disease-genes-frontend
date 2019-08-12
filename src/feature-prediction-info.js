@@ -1,5 +1,7 @@
 import React from 'react';
 import { Component } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
 import { toFixed } from 'hetio-frontend-components';
 import { InfoTable } from 'hetio-frontend-components';
@@ -19,9 +21,37 @@ export class FeaturePredictionInfo extends Component {
       [
         'Dis. Ont. id',
         tooltipText['disease_id'],
-        featurePrediction.disease_code
+        <a
+          href={
+            'http://www.disease-ontology.org/?id=' +
+            featurePrediction.disease_code
+          }
+        >
+          {featurePrediction.disease_code}
+          <FontAwesomeIcon
+            className='external_link_icon'
+            icon={faExternalLinkAlt}
+            size='xs'
+          />
+        </a>
       ],
-      ['EFO id', tooltipText['disease_efo_id'], info.EFO],
+      [
+        'EFO id',
+        tooltipText['disease_efo_id'],
+        <a
+          href={
+            'https://www.ebi.ac.uk/ols/ontologies/EFO/terms?obo_id=EFO:' +
+            info.EFO
+          }
+        >
+          {info.EFO}
+          <FontAwesomeIcon
+            className='external_link_icon'
+            icon={faExternalLinkAlt}
+            size='xs'
+          />
+        </a>
+      ],
       ['UMLS id', tooltipText['disease_umls_id'], info.UMLS_CUI],
       [
         'pathophysiology',
