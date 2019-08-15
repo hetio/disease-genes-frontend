@@ -6,10 +6,10 @@
   "dependencies": {
     "copy-to-clipboard": "^3.2.0",
     "hetio-frontend-components": "git+https://github.com/hetio/frontend-components.git#build",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
     "react-google-charts": "^3.0.14",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
