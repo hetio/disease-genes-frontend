@@ -4,7 +4,7 @@
     "main.js": "./static/js/main.js",
     "main.js.map": "./static/js/main.js.map",
     "index.html": "./index.html",
-    "precache-manifest.4abd8d3d6ff7ad2210348e071b03d0dc.js": "./precache-manifest.4abd8d3d6ff7ad2210348e071b03d0dc.js",
+    "precache-manifest.b60b6d8aef69cbc577f153becb26d928.js": "./precache-manifest.b60b6d8aef69cbc577f153becb26d928.js",
     "service-worker.js": "./service-worker.js",
     "static/css/main.css.map": "./static/css/main.css.map"
   }
