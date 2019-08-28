@@ -28,6 +28,7 @@ export class FeatureInfo extends Component {
       [
         'stand coef',
         tooltipText['metapath_coefficient'],
+        toFixed(feature.auroc, 2),
         feature.standardized_coefficient
       ]
     ];
