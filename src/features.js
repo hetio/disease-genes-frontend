@@ -116,7 +116,9 @@ export class Features extends Component {
                 fullValue={value}
               />
             ),
-            (datum, field, value) => <DynamicField value={value} />
+            (datum, field, value) => (
+              <DynamicField value={toFixed(value, 2)} fullValue={value} />
+            )
           ]}
           bodyStyles={[
             null,
