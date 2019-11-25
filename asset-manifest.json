@@ -4,8 +4,12 @@
     "main.js": "./static/js/main.js",
     "main.js.map": "./static/js/main.js.map",
     "index.html": "./index.html",
-    "precache-manifest.6f16608cbf76f5ebb78b3000d5f8e009.js": "./precache-manifest.6f16608cbf76f5ebb78b3000d5f8e009.js",
+    "precache-manifest.ca7c859d73d838ab36c3520e4f7aa613.js": "./precache-manifest.ca7c859d73d838ab36c3520e4f7aa613.js",
     "service-worker.js": "./service-worker.js",
     "static/css/main.35b5ee1e.css.map": "./static/css/main.35b5ee1e.css.map"
-  }
+  },
+  "entrypoints": [
+    "static/css/main.35b5ee1e.css",
+    "static/js/main.js"
+  ]
 }
